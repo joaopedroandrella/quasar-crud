@@ -10,6 +10,15 @@ export default function useApi (url) {
     }
   }
 
+  const getById = async (id) => {
+    try {
+      const { data } = await api.get(`${url}/${id}`)
+      return data
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
   const post = async (houseRules) => {
     try {
       const { data } = await api.post(url, houseRules)
@@ -41,6 +50,7 @@ export default function useApi (url) {
     list,
     post,
     update,
-    remove
+    remove,
+    getById
   }
 }

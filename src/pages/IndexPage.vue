@@ -12,7 +12,8 @@
         <q-btn color="primary" label="Add Row" :to="{ name: 'formPost' }" />
       </template>
       <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
+        <q-td :props="props" class="q-gutter-sm">
+          <q-btn icon="edit" color="primary" dense size="sm" @click="handelerEditPost(props.row.id)" />
           <q-btn icon="delete" color="negative" dense size="sm" @click="handeleDeletePost(props.row.id)" />
         </q-td>
       </template>
@@ -24,20 +25,22 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import postsService from 'src/services/posts'
 import { useQuasar } from 'quasar'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'IndexPage',
   setup () {
     const posts = ref([])
     const { list, remove } = postsService()
+    const router = useRouter()
+    const $q = useQuasar()
     const columns = [
       { name: 'id', label: 'Id', field: 'id', sortable: true, align: 'left' },
       { name: 'name', label: 'Name', field: 'name', sortable: true, align: 'left' },
-      { name: 'name', label: 'Active', field: 'name', sortable: true, align: 'left' },
+      { name: 'active', label: 'Active', field: 'active', sortable: true, align: 'left' },
       { name: 'order', label: 'Order', field: 'order', sortable: true, align: 'left' },
       { name: 'actions', label: 'Actions', field: 'actions' }
     ]
-    const $q = useQuasar()
 
     onMounted(() => {
       getPosts()
@@ -62,10 +65,15 @@ export default defineComponent({
       }
     }
 
+    const handelerEditPost = async (id) => {
+      router.push({ name: 'formPost', params: { id } })
+    }
+
     return {
       posts,
       columns,
-      handeleDeletePost
+      handeleDeletePost,
+      handelerEditPost
     }
   }
 })
